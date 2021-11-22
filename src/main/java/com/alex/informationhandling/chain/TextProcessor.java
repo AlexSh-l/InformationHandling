@@ -2,7 +2,12 @@ package com.alex.informationhandling.chain;
 
 import com.alex.informationhandling.composite.CustomComponent;
 
-public abstract class TextProcessor {
+public class TextProcessor extends AbstractProcessor {
 
-    public abstract void processText(String item, CustomComponent component);
+    private AbstractProcessor nextProcessor = new ParagraphProcessor();
+
+    @Override
+    public void processText(String item, CustomComponent component) {
+        nextProcessor.processText(item, component);
+    }
 }

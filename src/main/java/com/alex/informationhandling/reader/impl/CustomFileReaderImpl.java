@@ -6,26 +6,22 @@ import com.alex.informationhandling.reader.CustomFileReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class CustomFileReaderImpl implements CustomFileReader {
 
     private static final Logger logger = LogManager.getLogger();
 
     @Override
-    public Optional<List<String>> readFile() throws FileReaderException {
-        Optional<List<String>> optionalFileContentList;
-        try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(DEFAULT_FILE_PATH))) {
-            List<String> fileContentList = bufferedReader
-                    .lines()
-                    .collect(Collectors.toList());
-            optionalFileContentList = Optional.of(fileContentList);
+    public Optional<String> readFile() throws FileReaderException {
+        Optional<String> optionalFileContentList;
+        try {
+            String fileContent = Files.readString(Path.of(DEFAULT_FILE_PATH));
+            optionalFileContentList = Optional.of(fileContent);
         } catch (IOException e) {
             logger.error(e.getMessage());
             throw new FileReaderException("Unable to read from file", e);
@@ -34,14 +30,12 @@ public class CustomFileReaderImpl implements CustomFileReader {
     }
 
     @Override
-    public Optional<List<String>> readFile(String filePath) throws FileReaderException {
-        Optional<List<String>> optionalFileContentList;
-        try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(filePath))) {
-            List<String> fileContentList = bufferedReader
-                    .lines()
-                    .collect(Collectors.toList());
-            optionalFileContentList = Optional.of(fileContentList);
-        } catch (IOException e) {
+    public Optional<String> readFile(String filePath) throws FileReaderException {
+        Optional<String> optionalFileContentList;
+        try {
+            String fileContent = Files.readString(Path.of(filePath));
+            optionalFileContentList = Optional.of(fileContent);
+        } catch (IOException | InvalidPathException e) {
             logger.error(e.getMessage());
             throw new FileReaderException("Unable to read from file", e);
         }

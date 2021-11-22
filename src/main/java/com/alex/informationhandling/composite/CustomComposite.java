@@ -1,45 +1,69 @@
 package com.alex.informationhandling.composite;
 
-import com.alex.informationhandling.exception.CompositeException;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class CustomComposite implements CustomComponent {
 
-    private final List<CustomComponent> components = new ArrayList<>();
+    private List<CustomComponent> components = new ArrayList<>();
 
-    @Override
-    public void operation() {
-        for (int i = 0; i < components.size(); i++) {
-            components.get(i).operation();
-        }
+    private CustomComponentType componentType;
+
+    public CustomComposite(CustomComponentType type) {
+        this.componentType = type;
     }
 
     @Override
-    public void add(CustomComponent component)/* throws CompositeException */ {
-        //try {
+    public CustomComponentType getComponentType() {
+        return componentType;
+    }
+
+    @Override
+    public void add(CustomComponent component) {
         components.add(component);
-        //} catch (UnsupportedOperationException e) {
-        //throw new CompositeException(e.getMessage(), e);
-        //}
     }
 
     @Override
-    public void remove(CustomComponent component)/* throws CompositeException*/ {
-        //try {
+    public void remove(CustomComponent component) {
         components.remove(component);
-        //} catch (UnsupportedOperationException e) {
-        //throw new CompositeException(e.getMessage(), e);
-        //}
     }
 
     @Override
-    public CustomComponent getChild(int index)/* throws CompositeException*/ {
-        //try{
+    public void remove(int index) {
+        components.remove(index);
+    }
+
+    @Override
+    public CustomComponent getChild(int index) {
         return components.get(index);
-        //}catch (IndexOutOfBoundsException e){
-        //throw new CompositeException(e.getMessage(), e);
-        //}
+    }
+
+    @Override
+    public List<CustomComponent> getChildren()/* throws CompositeException*/ {
+        return components;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        String separator = "";
+        switch (componentType) {
+            case TEXT -> separator = "\r\n";
+            case PARAGRAPH -> separator = " ";
+            case SENTENCE -> separator = " ";
+        }
+        for (int i = 0; i < components.size(); ++i) {
+            CustomComponent component = components.get(i);
+            if (componentType.equals(CustomComponentType.TEXT)) {
+                sb.append("\t");
+                sb.append(component.toString().trim());
+            } else {
+                sb.append(component.toString());
+            }
+            if (i < components.size() - 1) {
+                sb.append(separator);
+            }
+        }
+        return sb.toString();
     }
 }

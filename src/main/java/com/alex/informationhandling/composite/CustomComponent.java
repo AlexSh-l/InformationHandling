@@ -1,14 +1,18 @@
 package com.alex.informationhandling.composite;
 
-import com.alex.informationhandling.exception.CompositeException;
+import java.util.List;
 
 public interface CustomComponent {
 
-    void operation();
+    CustomComponentType getComponentType();
 
-    void add(CustomComponent component) /*throws CompositeException*/;
+    void add(CustomComponent component);
 
-    void remove(CustomComponent component) /*throws CompositeException*/;
+    void remove(CustomComponent component);
 
-    CustomComponent getChild(int index) /*throws CompositeException*/;
+    void remove(int index);
+
+    CustomComponent getChild(int index);
+
+    List<CustomComponent> getChildren();
 }
